@@ -1,0 +1,112 @@
+﻿@{
+
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<h2>Add User</h2>
+<div class="form-group" style="display:none">
+    <input id="txtUserId" class="form-control" name="Id"/>
+</div>
+<div class="form-group">
+    <label for="Name">Name: </label>
+    <input id="txtUserName" class="form-control" name="Name" />
+</div>
+<div class="form-group">
+    <label for="Email">Email: </label>
+    <input id="txtUserEmail" class="form-control" name="Email" />
+</div>
+<div class="form-group">
+    <label for="Phone">Phone: </label>
+    <input id="txtUserPhone" class="form-control" name="Phone" />
+</div>
+<div class="text-center panel-body">
+    <button id="btnSave" class="btn btn-sm btn-primary">Save</button>
+</div>
+
+<button onclick="GetAllUsers()" class="btn btn-primary">Load Students</button>
+
+<br/>
+
+<h2>Users List</h2>
+<table id="tblUser" class="table table-sm table-striped table-bordered m-2">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+
+    function GetAllUsers() {
+        $.getJSON("/Users/GetAllUsers", function (users) {
+            $("tblUser tbody tr").remove();
+            $.map(users, function (user) {
+                $("#tblStudent tbody").append("tr"
+                    + "<td>" + user.Id + "</td>"
+                    + "<td>" + user.Name + "</td>"
+                    + "<td>" + user.Email + "</td>"
+                    + "<td>" + user.Phone + "</td>"
+                    + "<td>"
+                    + "       <button class='btn-success' onclick='Edit(" + user.Id + ")'style='margin-right:5px;'>Edit</button>"
+                    + "       <button class='btn-danger' onclick='Delete(" + user.Id + ")'style='margin-right:5px;'>Delete</button>"
+                    + "</td>"
+                    + "</tr>"
+                );
+            });
+        });
+
+    }
+
+    function Edit(Id) {
+        if (Id > 0) {
+            $getJSON("/Users/GetByUserId?Id=" + Id, function (user) {
+                $("#txtUserId").val(user.Id);
+                $("#txtUserName").val(user.Name);
+                $("#txtUserEmail").val(user.Email);
+                $("#txtUserPhone").val(user.Phone);
+
+            });
+        }
+    }
+
+    function Delete(Id) {
+        if (Id > 0) {
+            $getJSON("/Users/GetByUserId?Id=" + Id, function (user) {
+                $.ajax({
+                    url: '/Users/Delete?Id=' + Id,
+                    type: 'Delete',
+                    dataType: 'json',
+                    success: function (data) { },
+                    error: function (ex) {
+                        console.log('Error in Operation');
+                    }
+                })
+            });
+        }
+    }
+
+    $("#btnSave").click(function () {
+        let oUser = {
+            Id: $("#txtUserId").val(),
+            Name: $("#txtUserName").val(),
+            Email: $("#txtUserEmail").val(),
+            Phone: $("#txtUserPhone").val(),
+        };
+
+        $.post("/Users/AddUpdateUser", oUser)
+            .done(function (data) {
+                GetAllUsers
+            })
+    })
+
+</script>

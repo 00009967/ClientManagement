@@ -91,6 +91,7 @@ namespace ClientManagement.Controllers
             return View(user);
         }
 
+        [HttpGet]
         public async Task<User> GetUserById(int? Id)
         {
             _oUser = new User();
