@@ -13,7 +13,7 @@ namespace ClientManagement.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly string userApi = "https://localhost:44309/api/users/";
+        private readonly string userApi = "http://ec2-3-125-122-50.eu-central-1.compute.amazonaws.com/api/users/";
         HttpClientHandler _clientHandler = new HttpClientHandler();
         User _oUser = new User();
         List<User> _oUsers = new List<User>();
